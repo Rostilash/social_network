@@ -1,0 +1,32 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.app-wrapper {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "nav content";
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: 60px 1fr;
+  height: 100vh;
+}
+
+.app-wrapper > header {
+  grid-area: header;
+  background-color: rgba(255, 255, 0, 0.322);
+}
+
+.app-wrapper > nav {
+  grid-area: nav;
+  background-color: rgba(0, 0, 255, 0.26);
+}
+
+.app-wrapper > div {
+  grid-area: content;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
