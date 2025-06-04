@@ -2,4 +2,7 @@
 
 This project must be used on Redux technology
 
-Adding: nmp install react-router-dom
+Adding:
+nmp install react-router-dom
+npm install redux --save
+npm install react-redux --save
