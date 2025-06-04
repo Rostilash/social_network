@@ -39,7 +39,6 @@ let store = {
   },
 
   getState() {
-    // debugger;
     return this._state;
   },
 

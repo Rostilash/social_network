@@ -1,10 +1,10 @@
 import "./App.css";
 import { Header } from "./components/Header/Header";
 import { NavBar } from "./components/NavBar/NavBar";
-import { Dialogs } from "./components/Dialogs/Dialogs";
 import { Profile } from "./components/Profile/Profile";
 import { Route, Routes } from "react-router-dom";
-import { MyPosts } from "./components/MyPosts/MyPosts";
+import { MyPostsContainer } from "./components/MyPosts/MyPostsContainer";
+import { DialogsContainer } from "./components/Dialogs/DialogsContainer";
 
 function App(props) {
   return (
@@ -13,9 +13,9 @@ function App(props) {
       <NavBar />
       <div>
         <Routes>
-          <Route path="/" element={<Profile />} />
-          <Route path="/dialogs" element={<Dialogs store={props.store} />} />
-          <Route path="/profile" element={<MyPosts state={props.state.profilePage} dispatch={props.dispatch} />} />
+          <Route path="/" element={<Profile store={props.store} />} />
+          <Route path="/dialogs" element={<DialogsContainer store={props.store} />} />
+          <Route path="/profile" element={<MyPostsContainer store={props.store} />} />
         </Routes>
       </div>
     </div>
