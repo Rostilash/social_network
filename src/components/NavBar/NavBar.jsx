@@ -16,6 +16,11 @@ export function NavBar() {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/users" className={({ isActive }) => (isActive ? "active-link" : "")}>
+            Пошук друзів
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/news" className={({ isActive }) => (isActive ? "active-link" : "")}>
             Новини
           </NavLink>
