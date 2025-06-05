@@ -8,18 +8,10 @@ import { Provider } from "react-redux";
 const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
 
-const renderEntireTree = (state) => {
-  root.render(
-    <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </BrowserRouter>
-  );
-};
-
-store.subscribe(() => {
-  renderEntireTree(store.getState());
-});
-
-renderEntireTree(store.getState());
+root.render(
+  <BrowserRouter>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </BrowserRouter>
+);

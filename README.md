@@ -6,3 +6,4 @@ Adding:
 nmp install react-router-dom
 npm install redux --save
 npm install react-redux --save
+const deepCopy = structuredClone(original); or import cloneDeep from 'lodash/cloneDeep';
