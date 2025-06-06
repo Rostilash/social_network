@@ -3,17 +3,48 @@ import s from "./users.module.css";
 import axios from "axios";
 
 class Users extends React.Component {
-  constructor(props) {
-    super(props);
-    axios.get("https://dummyjson.com/users").then((response) => {
+  componentDidMount() {
+    axios
+      .get(`https://dummyjson.com/users?limit=${this.props.pageSize}&skip=${(this.props.currentPage - 1) * this.props.pageSize}`)
+      .then((response) => {
+        this.props.setUsers(response.data.users);
+        this.props.setTotalUsersCOunt(response.data.total);
+      });
+  }
+  onPageChanged(pageNumber) {
+    this.props.setCurrentPage(pageNumber);
+
+    axios.get(`https://dummyjson.com/users?limit=${this.props.pageSize}&skip=${(pageNumber - 1) * this.props.pageSize}`).then((response) => {
       this.props.setUsers(response.data.users);
     });
   }
 
   render() {
+    let page = this.props.currentPage;
+    let pagesCount = Math.ceil(this.props.totalUsersCount / this.props.pageSize);
+    let pages = [];
+    for (let i = 1; i <= pagesCount; i++) {
+      pages.push(i);
+    }
+
     return (
       <div>
-        <button onClick={this.getUsers}>User</button>
+        <div>
+          {pages.map((p, index) => {
+            return (
+              <span
+                key={index}
+                className={page === p ? s.selectedPage : ""}
+                onClick={() => {
+                  this.onPageChanged(p);
+                }}
+              >
+                {p}
+              </span>
+            );
+          })}
+        </div>
+
         {this.props.users.map((u) => (
           <div key={u.id} className={s.userContainer}>
             <span>
