@@ -1,5 +1,6 @@
 import React from "react";
 import s from "./users.module.css";
+import { NavLink } from "react-router-dom";
 
 export const UsersC = (props) => {
   console.log(props);
@@ -33,11 +34,13 @@ export const UsersC = (props) => {
         <div key={u.id} className={s.userContainer}>
           <span>
             <div>
-              <img
-                src={u.image != null ? u.image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWJaa44hakF5skS3g1dAqjMEuMAR6MgAetFw&s"}
-                alt=""
-                className={s.usersPhoto}
-              />
+              <NavLink to={"/profile/" + u.id}>
+                <img
+                  src={u.image != null ? u.image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWJaa44hakF5skS3g1dAqjMEuMAR6MgAetFw&s"}
+                  alt=""
+                  className={s.usersPhoto}
+                />
+              </NavLink>
             </div>
 
             <div>

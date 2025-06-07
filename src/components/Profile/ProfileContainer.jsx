@@ -1,0 +1,21 @@
+import React from "react";
+import { Profile } from "./Profile";
+import axios from "axios";
+import { connect } from "react-redux";
+import { setUserProfile } from "../../redux/profile-reducer";
+
+class ProfileContainer extends React.Component {
+  componentDidMount() {
+    axios.get(`https://dummyjson.com/users/1`).then((response) => {
+      this.props.setUserProfile(response.data);
+    });
+  }
+  render() {
+    return <Profile {...this.props} />;
+  }
+}
+let mapStateToProps = (state) => ({
+  profile: state.profilePage.profile,
+});
+
+export default connect(mapStateToProps, { setUserProfile })(ProfileContainer);

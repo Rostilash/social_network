@@ -1,7 +1,7 @@
 import React from "react";
+import axios from "axios";
 import { Follow, setCurrentPage, setUsers, setUsersTotalCount, toggleLoading, Unfollow } from "../../redux/users-reducer";
 import { connect } from "react-redux";
-import axios from "axios";
 import { UsersC } from "./UsersC";
 import { PreLoader } from "../common/Preloader/Preloader";
 

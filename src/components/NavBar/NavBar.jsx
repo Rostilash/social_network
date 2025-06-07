@@ -6,7 +6,7 @@ export function NavBar() {
     <nav className="nav">
       <ul className="nav-list">
         <li>
-          <NavLink to="/profile" className={({ isActive }) => (isActive ? "active-link" : "")}>
+          <NavLink to="/" className={({ isActive }) => (isActive ? "active-link" : "")}>
             Головна
           </NavLink>
         </li>
@@ -21,8 +21,8 @@ export function NavBar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/news" className={({ isActive }) => (isActive ? "active-link" : "")}>
-            Новини
+          <NavLink to="/profile" className={({ isActive }) => (isActive ? "active-link" : "")}>
+            Профіль
           </NavLink>
         </li>
         <li>
