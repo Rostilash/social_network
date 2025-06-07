@@ -1,0 +1,6 @@
+import React from "react";
+import s from "./loader.module.css";
+
+export const PreLoader = () => {
+  return <span class={s.loader}></span>;
+};
