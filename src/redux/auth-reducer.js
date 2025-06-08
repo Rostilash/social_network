@@ -19,7 +19,7 @@ const authReducer = (state = initialState, action) => {
 export const setUserData = (data) => ({ type: SET_USER_DATA, data: data });
 
 export const getAuthUser = () => {
-  return (despatch) => {
+  return (dispatch) => {
     authApi
       .getLogin()
       .then((data) => {
@@ -28,7 +28,7 @@ export const getAuthUser = () => {
         }
       })
       .then((data) => {
-        despatch(setUserData(data));
+        dispatch(setUserData(data));
       })
       .catch((err) => console.error(err.response?.data || err.message));
   };
