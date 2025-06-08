@@ -3,6 +3,7 @@ import profileReducer from "./profile-reducer";
 import dialogsReducer from "./dialogs-reducer";
 import sidebarReducer from "./sidebar-reducer";
 import usersReducer from "./users-reducer";
+import authReducer from "./auth-reducer";
 
 //take old state, and action and response new copy from function
 // we put it like key=> reduce file.
@@ -11,6 +12,7 @@ let counterReducer = combineReducers({
   dialogsPage: dialogsReducer,
   sideBar: sidebarReducer,
   usersPage: usersReducer,
+  auth: authReducer,
 });
 
 let store = createStore(counterReducer);

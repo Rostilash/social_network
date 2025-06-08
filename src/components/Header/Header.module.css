@@ -1,0 +1,12 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+.loginBlock {
+  display: flex;
+  float: right;
+  color: rgb(0, 0, 0);
+}

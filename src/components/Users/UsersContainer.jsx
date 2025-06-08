@@ -3,7 +3,7 @@ import axios from "axios";
 import { Follow, setCurrentPage, setUsers, setUsersTotalCount, toggleLoading, Unfollow } from "../../redux/users-reducer";
 import { connect } from "react-redux";
 import { UsersC } from "./UsersC";
-import { PreLoader } from "../common/Preloader/Preloader";
+import { PreLoader } from "../common/Preloader/PreLoader";
 
 class UsersСontainer extends React.Component {
   componentDidMount() {
