@@ -6,5 +6,7 @@ Adding:
 nmp install react-router-dom
 npm install redux --save
 npm install react-redux --save
-const deepCopy = structuredClone(original); or import cloneDeep from 'lodash/cloneDeep';
+( Copy obj with JSON.parse(JSON.stringify)
+const deepCopy = structuredClone(original); or import cloneDeep from 'lodash/cloneDeep';)
 npm install axios --save
+npm i redux-thunk

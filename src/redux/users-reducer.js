@@ -1,3 +1,5 @@
+import { usersApi } from "../api/api";
+
 const FOLLOW = "FOLLOW";
 const UNFOLLOW = "UNFOLLOW";
 const SET_USERS = "SET_USERS";
@@ -70,5 +72,38 @@ export const setCurrentPage = (currentPage) => ({ type: SET_CURRENT_PAGE, curren
 export const setUsersTotalCount = (totalUsersCount) => ({ type: SET_TOTAL_USERS_COUNT, count: totalUsersCount });
 export const toggleLoading = (isLoading) => ({ type: TOGGLE_IS_LOADING, isLoading: isLoading });
 export const toggleFollowingProgress = (isLoading, userId) => ({ type: TOGGLE_FOLLOWING_PROGRESS, followingInProgress: isLoading, userId });
+
+export const getUsers = (pageSize, currentPage) => {
+  return (dispatch) => {
+    dispatch(toggleLoading(true));
+
+    usersApi.getUsers(pageSize, currentPage).then((data) => {
+      dispatch(toggleLoading(false));
+      dispatch(setUsers(data.users));
+      dispatch(setUsersTotalCount(data.total));
+    });
+  };
+};
+export const getUser = (pageSize, pageNumber) => {
+  return (dispatch) => {
+    dispatch(toggleLoading(false));
+
+    usersApi
+      .getUsers(pageSize, pageNumber)
+      .then((data) => {
+        dispatch(toggleLoading(false));
+        const usersWithFollowFlag = data.users.map((user) => ({
+          ...user,
+          followed: false,
+        }));
+
+        dispatch(setUsers(usersWithFollowFlag));
+      })
+      .catch((error) => {
+        dispatch(toggleLoading(false));
+        console.error("Помилка при завантаженні користувачів:", error);
+      });
+  };
+};
 
 export default usersReducer;

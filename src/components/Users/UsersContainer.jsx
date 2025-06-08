@@ -1,40 +1,17 @@
 import React from "react";
-import { follow, setCurrentPage, setUsers, setUsersTotalCount, toggleFollowingProgress, toggleLoading, unfollow } from "../../redux/users-reducer";
+import { follow, getUser, getUsers, setCurrentPage, toggleFollowingProgress, unfollow } from "../../redux/users-reducer";
 import { connect } from "react-redux";
 import { UsersC } from "./UsersC";
 import { PreLoader } from "../common/Preloader/PreLoader";
-import { usersApi } from "../../api/api";
 
 class UsersСontainer extends React.Component {
   componentDidMount() {
-    this.props.toggleLoading(true);
-
-    usersApi.getUsers(this.props.pageSize, this.props.currentPage).then((data) => {
-      this.props.toggleLoading(false);
-      this.props.setUsers(data.users);
-      this.props.setUsersTotalCount(data.total);
-    });
+    this.props.getUsers(this.props.pageSize, this.props.currentPage);
   }
 
   onPageChanged = (pageNumber) => {
-    this.props.toggleLoading(true);
     this.props.setCurrentPage(pageNumber);
-
-    usersApi
-      .getUsers(this.props.pageSize, pageNumber)
-      .then((data) => {
-        this.props.toggleLoading(false);
-        const usersWithFollowFlag = data.users.map((user) => ({
-          ...user,
-          followed: false,
-        }));
-
-        this.props.setUsers(usersWithFollowFlag);
-      })
-      .catch((error) => {
-        this.props.toggleLoading(false);
-        console.error("Помилка при завантаженні користувачів:", error);
-      });
+    this.props.getUser(this.props.pageSize, pageNumber);
   };
 
   render() {
@@ -94,9 +71,8 @@ let mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   follow,
   unfollow,
-  setUsers,
   setCurrentPage,
-  setUsersTotalCount,
-  toggleLoading,
   toggleFollowingProgress,
+  getUsers,
+  getUser,
 })(UsersСontainer);
