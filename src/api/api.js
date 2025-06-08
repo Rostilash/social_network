@@ -19,11 +19,11 @@ export const usersApi = {
 };
 
 export const authApi = {
-  getLogin() {
+  getLogin(username, password) {
     return instance
       .post("auth/login", {
-        username: "emilys",
-        password: "emilyspass",
+        username: username,
+        password: password,
         expiresInMins: 30,
       })
       .then((res) => {

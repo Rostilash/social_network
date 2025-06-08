@@ -1,25 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Profile } from "./Profile";
 import { connect } from "react-redux";
 import { getUserByUrlId } from "../../redux/profile-reducer";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+const withHooks = (Component) => {
+  return (props) => {
+    const params = useParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if (!props.isAuth) {
+        navigate("/login");
+      }
+    }, [props.isAuth, navigate]);
+
+    return <Component {...props} params={params} />;
+  };
+};
 
 class ProfileContainer extends React.Component {
   componentDidMount() {
-    const userId = this.props.userId || 1;
+    const userId = this.props.params.userId || 1;
     this.props.getUserByUrlId(userId);
   }
+
   render() {
     return <Profile {...this.props} />;
   }
 }
-let mapStateToProps = (state) => ({
+
+const mapStateToProps = (state) => ({
   profile: state.profilePage.profile,
+  isAuth: state.auth.isAuth,
 });
 
-const withURLDataContainerComponent = (props) => {
-  const { userId } = useParams();
-  return <ProfileContainer {...props} userId={userId} />;
-};
-
-export default connect(mapStateToProps, { getUserByUrlId })(withURLDataContainerComponent);
+export default connect(mapStateToProps, { getUserByUrlId })(withHooks(ProfileContainer));

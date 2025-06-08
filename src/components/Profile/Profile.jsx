@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import s from "./Profile.module.css";
 import { PreLoader } from "./../common/Preloader/PreLoader";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = (props) => {
   if (!props.profile) {
     return <PreLoader />;
   }
+
   const { firstName, lastName, image, age } = props.profile;
   return (
     <div className={s.profile_page}>

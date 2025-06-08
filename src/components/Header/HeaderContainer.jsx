@@ -2,11 +2,12 @@ import React from "react";
 import { Header } from "./Header";
 import { connect } from "react-redux";
 import { getAuthUser } from "../../redux/auth-reducer";
-import { authApi } from "../../api/api";
 
 class HeadeContainer extends React.Component {
   componentDidMount() {
-    this.props.getAuthUser();
+    const username = ""; //"emilys";
+    const password = "emilyspass";
+    this.props.getAuthUser(username, password);
   }
 
   render() {
