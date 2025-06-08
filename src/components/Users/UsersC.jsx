@@ -44,16 +44,22 @@ export const UsersC = (props) => {
             <div>
               {!u.followed ? (
                 <button
+                  disabled={props.followingInProgress.some((id) => id === u.id)}
                   onClick={() => {
+                    props.toggleFollowingProgress(true, u.id);
                     props.follow(u.id);
+                    props.toggleFollowingProgress(false, u.id);
                   }}
                 >
                   Follow
                 </button>
               ) : (
                 <button
+                  disabled={props.followingInProgress.some((id) => id === u.id)}
                   onClick={() => {
+                    props.toggleFollowingProgress(true, u.id);
                     props.unfollow(u.id);
+                    props.toggleFollowingProgress(false, u.id);
                   }}
                 >
                   Unfollow

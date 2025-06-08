@@ -1,5 +1,5 @@
 import React from "react";
-import { follow, setCurrentPage, setUsers, setUsersTotalCount, toggleLoading, unfollow } from "../../redux/users-reducer";
+import { follow, setCurrentPage, setUsers, setUsersTotalCount, toggleFollowingProgress, toggleLoading, unfollow } from "../../redux/users-reducer";
 import { connect } from "react-redux";
 import { UsersC } from "./UsersC";
 import { PreLoader } from "../common/Preloader/PreLoader";
@@ -49,6 +49,8 @@ class UsersСontainer extends React.Component {
           users={this.props.users}
           follow={this.props.follow}
           unfollow={this.props.unfollow}
+          toggleFollowingProgress={this.props.toggleFollowingProgress}
+          followingInProgress={this.props.followingInProgress}
         />
       </>
     );
@@ -62,6 +64,7 @@ let mapStateToProps = (state) => {
     totalUsersCount: state.usersPage.totalUsersCount,
     currentPage: state.usersPage.currentPage,
     isLoading: state.usersPage.isLoading,
+    followingInProgress: state.usersPage.followingInProgress,
   };
 };
 
@@ -95,4 +98,5 @@ export default connect(mapStateToProps, {
   setCurrentPage,
   setUsersTotalCount,
   toggleLoading,
+  toggleFollowingProgress,
 })(UsersСontainer);
