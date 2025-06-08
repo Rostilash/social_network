@@ -12,14 +12,13 @@ export const UsersC = (props) => {
 
   return (
     <div>
-      <div>
+      <div className={s.pagination}>
         {pages.map((p, index) => {
           return (
             <span
               key={index}
               className={page === p ? s.selectedPage : ""}
               onClick={() => {
-                console.log(pages);
                 props.onPageChanged(p);
               }}
             >

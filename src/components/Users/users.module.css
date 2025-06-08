@@ -22,5 +22,13 @@
 }
 
 .selectedPage {
+  color: rgb(214, 138, 51);
   font-weight: bold;
+}
+
+.pagination {
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  justify-content: center;
 }

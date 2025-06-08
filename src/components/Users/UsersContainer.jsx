@@ -1,28 +1,40 @@
 import React from "react";
-import axios from "axios";
-import { Follow, setCurrentPage, setUsers, setUsersTotalCount, toggleLoading, Unfollow } from "../../redux/users-reducer";
+import { follow, setCurrentPage, setUsers, setUsersTotalCount, toggleLoading, unfollow } from "../../redux/users-reducer";
 import { connect } from "react-redux";
 import { UsersC } from "./UsersC";
 import { PreLoader } from "../common/Preloader/PreLoader";
+import { usersApi } from "../../api/api";
 
 class UsersСontainer extends React.Component {
   componentDidMount() {
     this.props.toggleLoading(true);
-    axios
-      .get(`https://dummyjson.com/users?limit=${this.props.pageSize}&skip=${(this.props.currentPage - 1) * this.props.pageSize}`)
-      .then((response) => {
-        this.props.toggleLoading(false);
-        this.props.setUsers(response.data.users);
-        this.props.setUsersTotalCount(response.data.total);
-      });
+
+    usersApi.getUsers(this.props.pageSize, this.props.currentPage).then((data) => {
+      this.props.toggleLoading(false);
+      this.props.setUsers(data.users);
+      this.props.setUsersTotalCount(data.total);
+    });
   }
+
   onPageChanged = (pageNumber) => {
     this.props.toggleLoading(true);
     this.props.setCurrentPage(pageNumber);
-    axios.get(`https://dummyjson.com/users?limit=${this.props.pageSize}&skip=${(pageNumber - 1) * this.props.pageSize}`).then((response) => {
-      this.props.toggleLoading(false);
-      this.props.setUsers(response.data.users);
-    });
+
+    usersApi
+      .getUsers(this.props.pageSize, pageNumber)
+      .then((data) => {
+        this.props.toggleLoading(false);
+        const usersWithFollowFlag = data.users.map((user) => ({
+          ...user,
+          followed: false,
+        }));
+
+        this.props.setUsers(usersWithFollowFlag);
+      })
+      .catch((error) => {
+        this.props.toggleLoading(false);
+        console.error("Помилка при завантаженні користувачів:", error);
+      });
   };
 
   render() {
@@ -77,8 +89,8 @@ let mapStateToProps = (state) => {
 // };
 
 export default connect(mapStateToProps, {
-  Follow,
-  Unfollow,
+  follow,
+  unfollow,
   setUsers,
   setCurrentPage,
   setUsersTotalCount,
