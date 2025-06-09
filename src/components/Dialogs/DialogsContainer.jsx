@@ -1,3 +1,4 @@
+import { compose } from "redux";
 import { withRouter } from "../../HOC/withRouter ";
 import { sendMessageCreator, updateNewMessageBodyCreator } from "../../redux/dialogs-reducer";
 import { Dialogs } from "./Dialogs";
@@ -21,4 +22,4 @@ let mapDispatchToProps = (dispatch) => {
   };
 };
 
-export const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(withRouter(Dialogs));
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(Dialogs);

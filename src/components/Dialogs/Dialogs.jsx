@@ -19,16 +19,6 @@ export const Dialogs = (props) => {
     props.sendMessage();
   };
 
-  // const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (!props.isAuth) {
-  //     navigate("/login");
-  //   }
-  // }, [props.isAuth, navigate]);
-
-  // if (!props.isAuth) return null;
-
   return (
     <div className={s.dialogs}>
       <div className={s.dialogItems}>{dialogElements}</div>

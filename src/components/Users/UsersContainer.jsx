@@ -3,6 +3,8 @@ import { follow, getUser, getUsers, setCurrentPage, toggleFollowingProgress, unf
 import { connect } from "react-redux";
 import { UsersC } from "./UsersC";
 import { PreLoader } from "../common/Preloader/PreLoader";
+import { compose } from "redux";
+import { withRouter } from "../../HOC/withRouter ";
 
 class UsersСontainer extends React.Component {
   componentDidMount() {
@@ -45,34 +47,14 @@ let mapStateToProps = (state) => {
   };
 };
 
-// let mapDispatchToProps = (dispatch) => {
-//   return {
-//     follow: (userId) => {
-//       dispatch(FollowAC(userId));
-//     },
-//     unfollow: (userId) => {
-//       dispatch(UnfollowAC(userId));
-//     },
-//     setUsers: (users) => {
-//       dispatch(setUsersAC(users));
-//     },
-//     setCurrentPage: (pageNumber) => {
-//       dispatch(setCurrentPageAC(pageNumber));
-//     },
-//     setTotalUsersCOunt: (totalCount) => {
-//       dispatch(setUsersTotalCountAC(totalCount));
-//     },
-//     toggleIsLoading: (isLoading) => {
-//       dispatch(toggleLoadingAC(isLoading));
-//     },
-//   };
-// };
-
-export default connect(mapStateToProps, {
-  follow,
-  unfollow,
-  setCurrentPage,
-  toggleFollowingProgress,
-  getUsers,
-  getUser,
-})(UsersСontainer);
+export default compose(
+  connect(mapStateToProps, {
+    follow,
+    unfollow,
+    setCurrentPage,
+    toggleFollowingProgress,
+    getUsers,
+    getUser,
+  }),
+  withRouter
+)(UsersСontainer);
