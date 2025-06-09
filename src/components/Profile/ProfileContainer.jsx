@@ -1,28 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Profile } from "./Profile";
 import { connect } from "react-redux";
 import { getUserByUrlId } from "../../redux/profile-reducer";
-import { useNavigate, useParams } from "react-router-dom";
-
-const withHooks = (Component) => {
-  return (props) => {
-    const params = useParams();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-      if (!props.isAuth) {
-        navigate("/login");
-      }
-    }, [props.isAuth, navigate]);
-
-    return <Component {...props} params={params} />;
-  };
-};
+import { withRouter } from "../../HOC/withRouter ";
 
 class ProfileContainer extends React.Component {
   componentDidMount() {
     const userId = this.props.params.userId || 1;
-    this.props.getUserByUrlId(userId);
+    if (this.props.isAuth) {
+      this.props.getUserByUrlId(userId);
+    }
   }
 
   render() {
@@ -35,4 +22,4 @@ const mapStateToProps = (state) => ({
   isAuth: state.auth.isAuth,
 });
 
-export default connect(mapStateToProps, { getUserByUrlId })(withHooks(ProfileContainer));
+export default connect(mapStateToProps, { getUserByUrlId })(withRouter(ProfileContainer));
