@@ -21,7 +21,7 @@ export function NavBar() {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/profile" className={({ isActive }) => (isActive ? "active-link" : "")}>
+          <NavLink to="/profile/1" className={({ isActive }) => (isActive ? "active-link" : "")}>
             Профіль
           </NavLink>
         </li>

@@ -5,7 +5,7 @@ import { getAuthUser } from "../../redux/auth-reducer";
 
 class HeadeContainer extends React.Component {
   componentDidMount() {
-    const username = ""; //"emilys";
+    const username = "emilys"; //"emilys";
     const password = "emilyspass";
     this.props.getAuthUser(username, password);
   }
