@@ -1,13 +1,14 @@
 import React from "react";
 import { Header } from "./Header";
 import { connect } from "react-redux";
-import { getAuthUser } from "../../redux/auth-reducer";
+import { getAuthUser, loginThunk } from "../../redux/auth-reducer";
+import { LoginForm } from "./../Login/Login";
 
 class HeadeContainer extends React.Component {
   componentDidMount() {
     const username = "emilys"; //"emilys";
     const password = "emilyspass";
-    this.props.getAuthUser(username, password);
+    this.props.loginThunk(username, password);
   }
 
   render() {

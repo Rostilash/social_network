@@ -10,3 +10,4 @@ npm install react-redux --save
 const deepCopy = structuredClone(original); or import cloneDeep from 'lodash/cloneDeep';)
 npm install axios --save
 npm i redux-thunk
+npm install react-hook-form yup @hookform/resolvers

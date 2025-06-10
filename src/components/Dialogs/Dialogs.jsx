@@ -1,21 +1,16 @@
+import React from "react";
 import s from "./Dialogs.module.css";
-import React, { useEffect } from "react";
 import { DialogItem } from "./DialogItem/DialogItem";
 import { Message } from "./Message/Message";
-import { useNavigate } from "react-router-dom";
+import { AddMessageForm } from "./Message/AddMessageForm";
 
 export const Dialogs = (props) => {
-  let state = props.dialogsPage;
-  let dialogElements = state.dialogs.map((d) => <DialogItem key={d.id} name={d.name} id={d.id} />);
-  let messagesElements = state.messages.map((m) => <Message key={m.id} message={m.message} />);
-  let newMessageBody = props.newMessageBody;
+  const state = props.dialogsPage;
+  const dialogElements = state.dialogs.map((d) => <DialogItem key={d.id} name={d.name} id={d.id} />);
+  const messagesElements = state.messages.map((m) => <Message key={m.id} message={m.message} />);
 
-  let onNewMessageChange = (e) => {
-    let body = e.target.value;
-    props.updateNewMessageBody(body);
-  };
-
-  let onSendMessageClick = () => {
+  const onSendMessage = (data) => {
+    props.updateNewMessageBody(data.newMessage);
     props.sendMessage();
   };
 
@@ -24,14 +19,7 @@ export const Dialogs = (props) => {
       <div className={s.dialogItems}>{dialogElements}</div>
       <div className={s.message}>
         <div>{messagesElements}</div>
-        <div>
-          <div>
-            <textarea value={newMessageBody} onChange={onNewMessageChange} placeholder="Введіть своє повідомлення"></textarea>
-          </div>
-          <div>
-            <button onClick={onSendMessageClick}>Надіслати</button>
-          </div>
-        </div>
+        <AddMessageForm onSendMessage={onSendMessage} />
       </div>
     </div>
   );
