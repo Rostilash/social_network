@@ -16,6 +16,15 @@ export const usersApi = {
       return response.data;
     });
   },
+
+  getStatus() {
+    return JSON.parse(localStorage.getItem("status")) || [];
+  },
+
+  setStatus(setStatustext, id) {
+    const obj = [{ id, text: setStatustext }];
+    return localStorage.setItem("status", JSON.stringify(obj));
+  },
 };
 
 export const authApi = {

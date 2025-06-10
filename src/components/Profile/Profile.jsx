@@ -8,7 +8,7 @@ export const Profile = (props) => {
     return <PreLoader />;
   }
 
-  const { firstName, lastName, image, age } = props.profile;
+  const { firstName, lastName, image, age, id } = props.profile;
   return (
     <div className={s.profile_page}>
       <div>
@@ -19,7 +19,7 @@ export const Profile = (props) => {
           Фіо: {firstName} {lastName}
         </div>
         <div>Років: {age}</div>
-        <ProfileStatus status={"Привіт мій друг"} />
+        <ProfileStatus status={props.status} id={id} updateStatus={props.updateStatus} />
       </div>
       <div>
         <h1>Про користувача </h1>
