@@ -23,23 +23,7 @@ const authReducer = (state = initialState, action) => {
 export const setUserData = (data) => ({ type: SET_USER_DATA, data: data });
 export const setAuthError = (error) => ({ type: SET_AUTH_ERROR, error });
 
-export const getAuthUser = (username, password) => {
-  return (dispatch) => {
-    authApi
-      .getLogin(username, password)
-      .then((data) => {
-        if (data?.accessToken) {
-          return authApi.getAuth(data.accessToken);
-        }
-      })
-      .then((data) => {
-        dispatch(setUserData(data));
-      })
-      .catch((err) => console.error(err.response?.data || err.message));
-  };
-};
-
-export const loginThunk = (username, password, remember) => {
+export const loginThunk = (username, password, remember = "false", navigate) => {
   return (dispatch) => {
     authApi
       .getLogin(username, password)
@@ -53,13 +37,27 @@ export const loginThunk = (username, password, remember) => {
       .then((data) => {
         dispatch(setUserData(data));
         if (remember) {
-          localStorage.setItem("token", data.accessToken); // збереження токена
+          localStorage.setItem("token", JSON.stringify(data.accessToken));
+        }
+        if (navigate) {
+          navigate("/");
         }
       })
       .catch((err) => {
         const errorMessage = err.response?.data?.message || err.message || "Помилка авторизації";
         dispatch(setAuthError(errorMessage));
       });
+  };
+};
+export const rememberLogin = () => {
+  return (dispatch) => {
+    return JSON.parse(localStorage.getItem("remember")) || [];
+  };
+};
+export const logout = () => {
+  return (dispatch) => {
+    localStorage.removeItem("remember");
+    dispatch.loginThunk(null, null, null, null);
   };
 };
 

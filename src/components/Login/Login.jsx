@@ -2,8 +2,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { loginThunk } from "../../redux/auth-reducer";
+import s from "./Login.module.css";
+import { useNavigate } from "react-router-dom";
 
 const schema = Yup.object().shape({
   login: Yup.string()
@@ -30,8 +32,15 @@ export const LoginForm = () => {
     mode: "onBlur",
   });
 
+  const navigate = useNavigate();
   const onSubmit = (data) => {
-    dispatch(loginThunk(data.login, data.password, data.remember));
+    dispatch(loginThunk(data.login, data.password, data.remember, navigate));
+
+    if (data.remember === true) {
+      const user = { login: data.login, password: data.password };
+      localStorage.setItem("remember", JSON.stringify(user));
+    }
+
     reset({
       login: "",
       password: "",
@@ -44,13 +53,18 @@ export const LoginForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* ЛОГІН */}
       <div>
-        <input type="text" placeholder="login" {...register("login")} />
+        <input type="text" placeholder="login" {...register("login")} className={touchedFields.login && errors.login ? s.error_input : ""} />
         {touchedFields.login && <p style={{ color: "red" }}>{!watch("login") ? "Поле не заповнено" : errors.login?.message}</p>}
       </div>
 
       {/* ПАРОЛЬ */}
       <div>
-        <input type="password" placeholder="password" {...register("password")} />
+        <input
+          type="password"
+          placeholder="password"
+          {...register("password")}
+          className={touchedFields.password && errors.password ? s.error_input : ""}
+        />
         {touchedFields.password && <p style={{ color: "red" }}>{!watch("password") ? "Поле не заповнено" : errors.password?.message}</p>}
       </div>
 
@@ -68,6 +82,10 @@ export const LoginForm = () => {
 };
 
 const Login = (props) => {
+  const navigate = useNavigate();
+  if (props.isAuth) {
+    navigate("/");
+  }
   return (
     <div>
       <h1>Login</h1>
@@ -76,4 +94,6 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => ({ data: state.auth.data, isAuth: state.auth.isAuth });
+
+export default connect(mapStateToProps, {})(Login);

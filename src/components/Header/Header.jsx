@@ -8,7 +8,13 @@ export function Header(props) {
       <h1>Мій сайт</h1>
 
       <div className={s.loginBlock}>
-        {props.auth ? "Привіт " + props.data.firstName + " " + props.data.lastName + "!" : <NavLink to={"/login"}> Вхід:</NavLink>}
+        {props.auth ? "Привіт " + props.data.firstName + " " + props.data.lastName + "!" : <NavLink to={"/login"}> Вхід</NavLink>}
+
+        {props.auth && (
+          <NavLink onClick={props.logout} style={{ cursor: "pointer" }} to={"/login"}>
+            Вихід
+          </NavLink>
+        )}
       </div>
     </header>
   );
