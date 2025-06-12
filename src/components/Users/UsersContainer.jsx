@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { UsersC } from "./UsersC";
 import { PreLoader } from "../common/Preloader/PreLoader";
 import { compose } from "redux";
-import { withRouter } from "../../HOC/withRouter ";
+import { withRouter } from "../../HOC/withRouter";
 
 class UsersСontainer extends React.Component {
   componentDidMount() {
@@ -19,7 +19,7 @@ class UsersСontainer extends React.Component {
   render() {
     return (
       <>
-        {this.props.isLoading ? <PreLoader /> : null}
+        {this.props.isLoading && this.props.isAuth === false ? <PreLoader /> : null}
         <UsersC
           totalUsersCount={this.props.totalUsersCount}
           pageSize={this.props.pageSize}
@@ -56,6 +56,6 @@ export default compose(
     toggleFollowingProgress,
     getUsers,
     getUser,
-  }),
-  withRouter
+  })
+  // withRouter
 )(UsersСontainer);

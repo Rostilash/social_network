@@ -7,11 +7,10 @@ export const withRouter = (Component) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-      if (!props.isAuth) {
+      if (props.isAuth === false) {
         navigate("/login");
       }
     }, [props.isAuth, navigate]);
-    if (!props.isAuth) return null;
 
     return <Component {...props} params={params} />;
   };

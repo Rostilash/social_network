@@ -24,36 +24,32 @@ export const setUserData = (data) => ({ type: SET_USER_DATA, data: data });
 export const setAuthError = (error) => ({ type: SET_AUTH_ERROR, error });
 
 export const loginThunk = (username, password, remember = "false", navigate) => {
-  return (dispatch) => {
-    authApi
-      .getLogin(username, password)
-      .then((data) => {
-        if (data?.accessToken) {
-          return authApi.getAuth(data.accessToken);
-        } else {
-          throw new Error("Невірний логін або пароль");
-        }
-      })
-      .then((data) => {
-        dispatch(setUserData(data));
-        if (remember) {
-          localStorage.setItem("token", JSON.stringify(data.accessToken));
-        }
-        if (navigate) {
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        const errorMessage = err.response?.data?.message || err.message || "Помилка авторизації";
-        dispatch(setAuthError(errorMessage));
-      });
+  return async (dispatch) => {
+    try {
+      const loginData = await authApi.getLogin(username, password);
+      if (!loginData?.accessToken) {
+        throw new Error("Невірний логін або пароль");
+      }
+
+      const userData = await authApi.getAuth(loginData.accessToken);
+      dispatch(setUserData(userData));
+
+      if (remember) {
+        localStorage.setItem("remember", JSON.stringify({ login: username, password }));
+      }
+
+      if (navigate) navigate("/");
+    } catch (err) {
+      const errorMessage = err.response?.data?.message || err.message || "Помилка авторизації";
+      dispatch(setAuthError(errorMessage));
+    }
   };
 };
+
 export const rememberLogin = () => {
-  return (dispatch) => {
-    return JSON.parse(localStorage.getItem("remember")) || [];
-  };
+  return JSON.parse(localStorage.getItem("remember")) || {};
 };
+
 export const logout = () => {
   return (dispatch) => {
     localStorage.removeItem("remember");

@@ -4,6 +4,7 @@ import dialogsReducer from "./dialogs-reducer";
 import sidebarReducer from "./sidebar-reducer";
 import usersReducer from "./users-reducer";
 import authReducer from "./auth-reducer";
+import appReducer from "./app-reducer";
 import { thunk } from "redux-thunk";
 
 //take old state, and action and response new copy from function
@@ -14,6 +15,7 @@ let counterReducer = combineReducers({
   sideBar: sidebarReducer,
   usersPage: usersReducer,
   auth: authReducer,
+  app: appReducer,
 });
 
 let store = createStore(counterReducer, applyMiddleware(thunk));

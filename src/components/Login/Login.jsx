@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -83,9 +83,13 @@ export const LoginForm = () => {
 
 const Login = (props) => {
   const navigate = useNavigate();
-  if (props.isAuth) {
-    navigate("/");
-  }
+
+  useEffect(() => {
+    if (props.isAuth) {
+      navigate("/");
+    }
+  }, [props.isAuth, navigate]);
+
   return (
     <div>
       <h1>Login</h1>

@@ -2,7 +2,7 @@ import React from "react";
 import { Profile } from "./Profile";
 import { connect } from "react-redux";
 import { getUserByUrlId, updateStatus } from "../../redux/profile-reducer";
-import { withRouter } from "../../HOC/withRouter ";
+import { withRouter } from "../../HOC/withRouter";
 import { compose } from "redux";
 
 class ProfileContainer extends React.Component {

@@ -1,5 +1,5 @@
 import { compose } from "redux";
-import { withRouter } from "../../HOC/withRouter ";
+import { withRouter } from "../../HOC/withRouter";
 import { sendMessageCreator, updateNewMessageBodyCreator } from "../../redux/dialogs-reducer";
 import { Dialogs } from "./Dialogs";
 import { connect } from "react-redux";
