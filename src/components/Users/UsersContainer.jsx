@@ -4,7 +4,16 @@ import { connect } from "react-redux";
 import { UsersC } from "./UsersC";
 import { PreLoader } from "../common/Preloader/PreLoader";
 import { compose } from "redux";
-import { withRouter } from "../../HOC/withRouter";
+
+import {
+  getCurrentPage,
+  getFollowingInProgress,
+  getIsAuth,
+  getIsLoading,
+  getTotalUsersCount,
+  getPageSize,
+  getUsersSelector,
+} from "./../../redux/users-selectors";
 
 class UsersСontainer extends React.Component {
   componentDidMount() {
@@ -36,15 +45,27 @@ class UsersСontainer extends React.Component {
   }
 }
 
+// let mapStateToProps = (state) => {
+//   return {
+//     users: state.usersPage.users,
+//     pageSize: state.usersPage.pageSize,
+//     totalUsersCount: state.usersPage.totalUsersCount,
+//     currentPage: state.usersPage.currentPage,
+//     isLoading: state.usersPage.isLoading,
+//     followingInProgress: state.usersPage.followingInProgress,
+//     isAuth: state.auth.isAuth,
+//   };
+// };
+
 let mapStateToProps = (state) => {
   return {
-    users: state.usersPage.users,
-    pageSize: state.usersPage.pageSize,
-    totalUsersCount: state.usersPage.totalUsersCount,
-    currentPage: state.usersPage.currentPage,
-    isLoading: state.usersPage.isLoading,
-    followingInProgress: state.usersPage.followingInProgress,
-    isAuth: state.auth.isAuth,
+    users: getUsersSelector(state),
+    pageSize: getPageSize(state),
+    totalUsersCount: getTotalUsersCount(state),
+    currentPage: getCurrentPage(state),
+    isLoading: getIsLoading(state),
+    followingInProgress: getFollowingInProgress(state),
+    isAuth: getIsAuth(state),
   };
 };
 
