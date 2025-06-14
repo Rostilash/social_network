@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { UsersC } from "./UsersC";
 import { PreLoader } from "../common/Preloader/PreLoader";
 import { compose } from "redux";
-
 import {
   getCurrentPage,
   getFollowingInProgress,
@@ -45,18 +44,6 @@ class UsersСontainer extends React.Component {
   }
 }
 
-// let mapStateToProps = (state) => {
-//   return {
-//     users: state.usersPage.users,
-//     pageSize: state.usersPage.pageSize,
-//     totalUsersCount: state.usersPage.totalUsersCount,
-//     currentPage: state.usersPage.currentPage,
-//     isLoading: state.usersPage.isLoading,
-//     followingInProgress: state.usersPage.followingInProgress,
-//     isAuth: state.auth.isAuth,
-//   };
-// };
-
 let mapStateToProps = (state) => {
   return {
     users: getUsersSelector(state),
@@ -78,5 +65,4 @@ export default compose(
     getUsers,
     getUser,
   })
-  // withRouter
 )(UsersСontainer);

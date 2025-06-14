@@ -30,6 +30,7 @@ class ProfileStatus extends React.Component {
 
     console.log("Component did update");
   }
+
   render() {
     return (
       <div>
