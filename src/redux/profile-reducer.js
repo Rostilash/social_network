@@ -27,7 +27,6 @@ const profileReducer = (state = initialState, action) => {
 
       return { ...state, posts: [...state.posts, newPost], newPostsText: "" };
     }
-
     case SET_USER_PROFILE: {
       return { ...state, profile: action.profile };
     }

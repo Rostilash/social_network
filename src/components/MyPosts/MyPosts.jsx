@@ -3,7 +3,8 @@ import s from "./MyPosts.module.css";
 import { Post } from "./Post";
 import { useForm } from "react-hook-form";
 
-export const MyPosts = (props) => {
+export const MyPosts = React.memo(({ posts, addPost }) => {
+  console.log("MyPosts rerender", posts);
   const {
     register,
     handleSubmit,
@@ -13,11 +14,11 @@ export const MyPosts = (props) => {
 
   const onSubmit = (data) => {
     console.log(data);
-    props.addPost(data.newPostText);
+    addPost(data.newPostText);
     reset();
   };
 
-  let postsElements = props.posts.map((p) => <Post key={p.id} message={p.message} likesCount={p.likesCount} />);
+  let postsElements = posts.map((p) => <Post key={p.id} message={p.message} likesCount={p.likesCount} />);
 
   return (
     <div className={s.postsBlock}>
@@ -40,4 +41,4 @@ export const MyPosts = (props) => {
       <div>{postsElements}</div>
     </div>
   );
-};
+});
