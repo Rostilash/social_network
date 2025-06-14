@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="N-z4DUHniy2R9jtudcL1" name="Page-1">
-        <mxGraphModel dx="526" dy="467" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="945" dy="1216" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -33,6 +33,9 @@
                 <mxCell id="26" style="edgeStyle=none;html=1;" parent="1" source="9" target="25" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
+                <mxCell id="47" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="9" target="46">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
                 <mxCell id="9" value="BrowserRouter" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="355" y="180" width="90" height="40" as="geometry"/>
                 </mxCell>
@@ -52,10 +55,10 @@
                     <mxGeometry x="240" y="240" width="80" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="14" value="NavBar" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="560" y="240" width="80" height="40" as="geometry"/>
+                    <mxGeometry x="760" y="200" width="80" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="15" value="Header" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="680" y="240" width="80" height="40" as="geometry"/>
+                    <mxGeometry x="760" y="150" width="80" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="16" style="edgeStyle=none;html=1;entryX=0.389;entryY=0.054;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="9" target="12" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
@@ -108,8 +111,11 @@
                 <mxCell id="44" value="dialogs and messages" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#47FF32;" parent="1" vertex="1">
                     <mxGeometry y="300" width="135" height="10" as="geometry"/>
                 </mxCell>
-                <mxCell id="45" value="disptch(action , type)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="45" value="disptch(action , type)" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="320" width="170" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="Users" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="560" y="240" width="80" height="40" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
