@@ -2,7 +2,7 @@
 
 This project must be used on Redux technology
 
-Adding:
+Adding libraries:
 nmp install react-router-dom
 npm install redux --save
 npm install react-redux --save
@@ -11,3 +11,4 @@ const deepCopy = structuredClone(original); or import cloneDeep from 'lodash/clo
 npm install axios --save
 npm i redux-thunk
 npm install react-hook-form yup @hookform/resolvers
+npm install reselect
