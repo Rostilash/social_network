@@ -1,83 +1,34 @@
 import React from "react";
 import s from "./users.module.css";
 import { NavLink } from "react-router-dom";
+import { Paginator } from "./Paginator";
+import { User } from "./User";
 
-export const UsersC = (props) => {
-  let page = props.currentPage;
-  let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
-  let pages = [];
-  for (let i = 1; i <= pagesCount; i++) {
-    pages.push(i);
-  }
-
+export const UsersC = ({
+  currentPage,
+  totalUsersCount,
+  onPageChanged,
+  pageSize,
+  users,
+  followingInProgress,
+  follow,
+  unfollow,
+  toggleFollowingProgress,
+  ...props
+}) => {
   return (
     <div>
-      <div className={s.pagination}>
-        {pages.map((p, index) => {
-          return (
-            <span
-              key={index}
-              className={page === p ? s.selectedPage : ""}
-              onClick={() => {
-                props.onPageChanged(p);
-              }}
-            >
-              {p}
-            </span>
-          );
-        })}
-      </div>
+      <Paginator currentPage={currentPage} onPageChanged={onPageChanged} totalUsersCount={totalUsersCount} pageSize={pageSize} />
 
-      {props.users.map((u) => (
-        <div key={u.id} className={s.userContainer}>
-          <span>
-            <div>
-              <NavLink to={"/profile/" + u.id}>
-                <img
-                  src={u.image != null ? u.image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWJaa44hakF5skS3g1dAqjMEuMAR6MgAetFw&s"}
-                  alt=""
-                  className={s.usersPhoto}
-                />
-              </NavLink>
-            </div>
-
-            <div>
-              {!u.followed ? (
-                <button
-                  disabled={props.followingInProgress.some((id) => id === u.id)}
-                  onClick={() => {
-                    props.toggleFollowingProgress(true, u.id);
-                    props.follow(u.id);
-                    props.toggleFollowingProgress(false, u.id);
-                  }}
-                >
-                  Follow
-                </button>
-              ) : (
-                <button
-                  disabled={props.followingInProgress.some((id) => id === u.id)}
-                  onClick={() => {
-                    props.toggleFollowingProgress(true, u.id);
-                    props.unfollow(u.id);
-                    props.toggleFollowingProgress(false, u.id);
-                  }}
-                >
-                  Unfollow
-                </button>
-              )}
-            </div>
-          </span>
-          <span className={s.userInfoContainer}>
-            <span className={s.userContext}>
-              <div>{u.firstName}</div>
-              <div>{u.company.name}</div>
-            </span>
-            <span>
-              <div>{u.address.city}</div>
-              <div>{u.address.country}</div>
-            </span>
-          </span>
-        </div>
+      {users.map((u) => (
+        <User
+          user={u}
+          key={u.id}
+          followingInProgress={followingInProgress}
+          follow={follow}
+          unfollow={unfollow}
+          toggleFollowingProgress={toggleFollowingProgress}
+        />
       ))}
     </div>
   );

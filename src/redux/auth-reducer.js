@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { authApi } from "../api/api";
 
 const SET_USER_DATA = "SET_USER_DATA";
@@ -23,7 +24,7 @@ const authReducer = (state = initialState, action) => {
 export const setUserData = (data) => ({ type: SET_USER_DATA, data: data });
 export const setAuthError = (error) => ({ type: SET_AUTH_ERROR, error });
 
-export const loginThunk = (username, password, remember = "false", navigate) => {
+export const loginThunk = (username, password, remember = "false") => {
   return async (dispatch) => {
     try {
       const loginData = await authApi.getLogin(username, password);

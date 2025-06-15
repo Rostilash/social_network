@@ -52,10 +52,9 @@ export const setStatus = (status) => ({ type: SET_STATUS, status: status });
 export const deletePost = (id) => ({ type: DELETE_POST, id });
 
 export const getUserByUrlId = (userId) => {
-  return (dispatch) => {
-    usersApi.getUser(userId).then((data) => {
-      dispatch(setUserProfile(data));
-    });
+  return async (dispatch) => {
+    const data = await usersApi.getUser(userId);
+    dispatch(setUserProfile(data));
   };
 };
 

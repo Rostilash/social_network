@@ -1,4 +1,5 @@
 import { usersApi } from "../api/api";
+import { updateObjectInArray } from "../utils/helper/objects-helpers";
 
 const FOLLOW = "FOLLOW";
 const UNFOLLOW = "UNFOLLOW";
@@ -22,22 +23,12 @@ const usersReducer = (state = initialState, action) => {
     case FOLLOW:
       return {
         ...state,
-        users: state.users.map((u) => {
-          if (u.id === action.userId) {
-            return { ...u, followed: true };
-          }
-          return u;
-        }),
+        users: updateObjectInArray(state.users, action.userId, "id", { followed: true }),
       };
     case UNFOLLOW:
       return {
         ...state,
-        users: state.users.map((u) => {
-          if (u.id === action.userId) {
-            return { ...u, followed: false };
-          }
-          return u;
-        }),
+        users: updateObjectInArray(state.users, action.userId, "id", { followed: false }),
       };
     case SET_USERS: {
       return { ...state, users: action.users };
@@ -74,35 +65,30 @@ export const toggleLoading = (isLoading) => ({ type: TOGGLE_IS_LOADING, isLoadin
 export const toggleFollowingProgress = (isLoading, userId) => ({ type: TOGGLE_FOLLOWING_PROGRESS, followingInProgress: isLoading, userId });
 
 export const getUsers = (pageSize, page) => {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(toggleLoading(true));
-
-    usersApi.getUsers(pageSize, page).then((data) => {
-      dispatch(toggleLoading(false));
-      dispatch(setUsers(data.users));
-      dispatch(setUsersTotalCount(data.total));
-    });
+    const data = await usersApi.getUsers(pageSize, page);
+    dispatch(toggleLoading(false));
+    dispatch(setUsers(data.users));
+    dispatch(setUsersTotalCount(data.total));
   };
 };
 export const getUser = (pageSize, pageNumber) => {
-  return (dispatch) => {
-    dispatch(toggleLoading(false));
+  return async (dispatch) => {
+    try {
+      dispatch(toggleLoading(false));
+      const data = await usersApi.getUsers(pageSize, pageNumber);
+      const usersWithFollowFlag = data.users.map((user) => ({
+        ...user,
+        followed: false,
+      }));
 
-    usersApi
-      .getUsers(pageSize, pageNumber)
-      .then((data) => {
-        dispatch(toggleLoading(false));
-        const usersWithFollowFlag = data.users.map((user) => ({
-          ...user,
-          followed: false,
-        }));
-
-        dispatch(setUsers(usersWithFollowFlag));
-      })
-      .catch((error) => {
-        dispatch(toggleLoading(false));
-        console.error("Помилка при завантаженні користувачів:", error);
-      });
+      dispatch(setUsers(usersWithFollowFlag));
+    } catch (error) {
+      console.error("Помилка при завантаженні користувачів:", error);
+    } finally {
+      dispatch(toggleLoading(false));
+    }
   };
 };
 

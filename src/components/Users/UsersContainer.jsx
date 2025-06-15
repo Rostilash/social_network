@@ -16,7 +16,8 @@ import {
 
 class UsersСontainer extends React.Component {
   componentDidMount() {
-    this.props.getUsers(this.props.pageSize, this.props.currentPage);
+    const { getUsers, pageSize, currentPage } = this.props;
+    getUsers(pageSize, currentPage);
   }
 
   onPageChanged = (pageNumber) => {
