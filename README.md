@@ -12,3 +12,4 @@ npm install axios --save
 npm i redux-thunk
 npm install react-hook-form yup @hookform/resolvers
 npm install reselect
+npm install -D vitest

@@ -4,7 +4,6 @@ import { Post } from "./Post";
 import { useForm } from "react-hook-form";
 
 export const MyPosts = React.memo(({ posts, addPost }) => {
-  console.log("MyPosts rerender", posts);
   const {
     register,
     handleSubmit,
