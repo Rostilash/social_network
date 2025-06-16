@@ -12,4 +12,5 @@ npm install axios --save
 npm i redux-thunk
 npm install react-hook-form yup @hookform/resolvers
 npm install reselect
-npm install -D vitest
+npm install -D vitest (npm vitest run)
+npm install react-test-renderer --save-dev (buy ion our days npm install @testing-library/react @testing-library/jest-dom --save-dev)
