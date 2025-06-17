@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import s from "./Profile.module.css";
 import { PreLoader } from "./../common/Preloader/PreLoader";
 import ProfileStatusWithHooks from "./ProfileStatusWithHooks";
 
 export const Profile = ({ profile, status, updateStatus }) => {
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
   if (!profile) {
     return <PreLoader />;
   }
@@ -14,7 +20,9 @@ export const Profile = ({ profile, status, updateStatus }) => {
     <div className={s.profile_page}>
       <div>
         <div className={s.image}>
-          <img src={image} alt="image" />
+          <img src={image || "vite.svg"} alt="image" />
+          {/* <button>Завантажити</button> */}
+          <input type="file" onChange={handleFileChange} />
         </div>
         <div className={s.header}>
           Фіо: {firstName} {lastName}

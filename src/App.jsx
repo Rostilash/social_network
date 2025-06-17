@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, Navigate } from "react";
 import { NavBar } from "./components/NavBar/NavBar";
 import { Route, Routes } from "react-router-dom";
 import { MyPostsContainer } from "./components/MyPosts/MyPostsContainer";
@@ -22,8 +22,15 @@ const UsersContainer = lazy(
 );
 
 class App extends React.Component {
+  catchAllUnhendleErrors = (promiseRejectionEvent) => {
+    alert("hello");
+  };
   componentDidMount() {
     this.props.initializeApp();
+    window.addEventListener("unhandledrejection", this.catchAllUnhendleErrors);
+  }
+  componentWillUnmount() {
+    window.addEventListener("unhandledrejection", this.catchAllUnhendleErrors);
   }
 
   render() {
@@ -40,11 +47,12 @@ class App extends React.Component {
         <NavBar />
         <div>
           <Routes>
-            <Route path="/" element={<MyPostsContainer />} />
+            <Route expect path="/" element={<MyPostsContainer />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile/:userId" element={<ProfileContainer />} />
             <Route path="/dialogs" element={<SuspendedDialogs />} />
             <Route path="/users" element={<SuspendedUsers />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </div>
       </div>

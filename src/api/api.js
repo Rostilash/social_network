@@ -22,8 +22,12 @@ export const usersApi = {
   },
 
   setStatus(setStatustext, id) {
-    const obj = [{ id, text: setStatustext }];
-    return localStorage.setItem("status", JSON.stringify(obj));
+    try {
+      const obj = [{ id, text: setStatustext }];
+      return localStorage.setItem("status", JSON.stringify(obj));
+    } catch (error) {
+      console.log("Файл не зміненно");
+    }
   },
 };
 

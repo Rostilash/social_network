@@ -6,10 +6,19 @@ import { withRouter } from "../../HOC/withRouter";
 import { compose } from "redux";
 
 class ProfileContainer extends React.Component {
-  componentDidMount() {
+  refreshProfile() {
     const userId = this.props.params.userId || 1;
     if (this.props.isAuth) {
       this.props.getUserByUrlId(userId);
+    }
+  }
+
+  componentDidMount() {
+    this.refreshProfile();
+  }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.params.userId != prevProps.params.userId) {
+      this.refreshProfile();
     }
   }
 
