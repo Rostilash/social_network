@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { Suspense, lazy, Navigate } from "react";
+import React, { lazy, Navigate } from "react";
 import { NavBar } from "./components/NavBar/NavBar";
 import { Route, Routes } from "react-router-dom";
 import { MyPostsContainer } from "./components/MyPosts/MyPostsContainer";
@@ -12,6 +12,7 @@ import { withRouter } from "./HOC/withRouter";
 import { initializeApp } from "./redux/app-reducer";
 import { PreLoader } from "./components/common/Preloader/PreLoader";
 import { withSuspense } from "./HOC/withSuspense";
+import { TodoContainer } from "./components/Todo/TodoContainer";
 
 const DialogsContainer = lazy(() => import("./components/Dialogs/DialogsContainer"));
 const UsersContainer = lazy(
@@ -52,6 +53,7 @@ class App extends React.Component {
             <Route path="/profile/:userId" element={<ProfileContainer />} />
             <Route path="/dialogs" element={<SuspendedDialogs />} />
             <Route path="/users" element={<SuspendedUsers />} />
+            <Route path="/todo" element={<TodoContainer />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </div>

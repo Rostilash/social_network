@@ -14,3 +14,9 @@ npm install react-hook-form yup @hookform/resolvers
 npm install reselect
 npm install -D vitest (npm vitest run)
 npm install react-test-renderer --save-dev (buy ion our days npm install @testing-library/react @testing-library/jest-dom --save-dev)
+
+pgSql server/: (Make new Server Folder)(with axios)
+npm init -y
+npm install express cors (npm install cors)
+node index.js (in terminal you can start the server by loading the current file)
+npm install pg (const { Pool } = require('pg');)

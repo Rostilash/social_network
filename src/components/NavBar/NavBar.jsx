@@ -31,6 +31,11 @@ export function NavBar() {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/todo" className={({ isActive }) => (isActive ? "active-link" : "")}>
+            Треба зробити
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/settings" className={({ isActive }) => (isActive ? "active-link" : "")}>
             Налаштування
           </NavLink>
