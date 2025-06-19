@@ -20,3 +20,6 @@ npm init -y
 npm install express cors (npm install cors)
 node index.js (in terminal you can start the server by loading the current file)
 npm install pg (const { Pool } = require('pg');)
+npm install express-session (for Auth)
+
+npm install dotenv

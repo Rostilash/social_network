@@ -25,21 +25,21 @@ export function NavBar() {
             Профіль
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink to="/music" className={({ isActive }) => (isActive ? "active-link" : "")}>
             Музика
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink to="/todo" className={({ isActive }) => (isActive ? "active-link" : "")}>
             Треба зробити
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink to="/settings" className={({ isActive }) => (isActive ? "active-link" : "")}>
             Налаштування
           </NavLink>
-        </li>
+        </li> */}
       </ul>
     </nav>
   );

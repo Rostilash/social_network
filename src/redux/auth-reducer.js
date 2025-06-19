@@ -1,6 +1,4 @@
-import { useNavigate } from "react-router-dom";
 import { authApi } from "../api/api";
-
 const SET_USER_DATA = "SET_USER_DATA";
 const SET_AUTH_ERROR = "SET_AUTH_ERROR";
 
@@ -38,8 +36,6 @@ export const loginThunk = (username, password, remember = "false") => {
       if (remember) {
         localStorage.setItem("remember", JSON.stringify({ login: username, password }));
       }
-
-      if (navigate) navigate("/");
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || "Помилка авторизації";
       dispatch(setAuthError(errorMessage));

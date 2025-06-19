@@ -16,8 +16,6 @@ const schema = Yup.object().shape({
   remember: Yup.boolean(),
 });
 
-// emilyspass - password emily login (for rest api auth)
-
 export const LoginForm = () => {
   const dispatch = useDispatch();
   const authError = useSelector((state) => state.auth.error);
@@ -45,6 +43,7 @@ export const LoginForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input name="login" placeholder="Login" register={register} errors={errors} touchedFields={touchedFields} watch={watch} />
       <Input name="password" type="password" placeholder="Password" register={register} errors={errors} touchedFields={touchedFields} watch={watch} />
+
       <Input
         name="remember"
         type="checkbox"

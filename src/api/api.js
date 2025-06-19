@@ -3,6 +3,9 @@ import axios from "axios";
 const instance = axios.create({
   baseURL: "https://dummyjson.com/",
 });
+const localInstance = axios.create({
+  baseURL: "http://localhost:5000/",
+});
 
 export const usersApi = {
   getUser(userId = 1) {
@@ -53,5 +56,40 @@ export const authApi = {
       .then((res) => {
         return res.data;
       });
+  },
+};
+
+export const todoApi = {
+  async getLogin(username, password) {
+    try {
+      const response = await localInstance.post("api/login", { username, password }, { withCredentials: true });
+      return response.data;
+    } catch (err) {
+      throw err;
+    }
+  },
+  async getUserTodos() {
+    try {
+      const response = await localInstance.get("api/todo", { withCredentials: true });
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        console.log("Користувач не авторизований");
+      } else {
+        console.error("Помилка:", error.message);
+      }
+    }
+  },
+  async logoutUser() {
+    try {
+      const response = await localInstance.post("api/logout", null, { withCredentials: true });
+      return response.data.message;
+    } catch (error) {
+      console.log("Не вдалося вийти");
+    }
+  },
+  async checkUserAuth() {
+    const response = await localInstance.get("api/me", { withCredentials: true });
+    return { user: response.data };
   },
 };

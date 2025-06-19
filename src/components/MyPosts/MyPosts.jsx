@@ -12,7 +12,6 @@ export const MyPosts = React.memo(({ posts, addPost }) => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     addPost(data.newPostText);
     reset();
   };

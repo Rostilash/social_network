@@ -1,14 +1,41 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
 
 const app = express();
 const pool = require("./pgsql");
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Головна сторінка");
-});
+console.log("SESSION_SECRET:", process.env.SESSION_SECRET);
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60, // 1 hour
+    },
+  })
+);
+
+function isAuth(req, res, next) {
+  if (req.session.userId) {
+    next();
+  } else {
+    res.status(401).json({ message: "Не авторизований" });
+  }
+}
 
 app.get("/api/users", async (req, res) => {
   try {
@@ -20,13 +47,69 @@ app.get("/api/users", async (req, res) => {
   }
 });
 
-app.get("/api/todo", async (req, res) => {
+app.post("/api/login", async (req, res) => {
+  const { username, password } = req.body;
+
   try {
-    const result = await pool.query("SELECT * FROM todolist.task");
+    const result = await pool.query("SELECT * FROM todolist.user_data WHERE username = $1", [username]);
+
+    const user = result.rows[0];
+    if (!user) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    if (password !== user.password) {
+      return res.status(401).json({ message: "Невірний пароль" });
+    }
+
+    req.session.userId = user.id;
+    req.session.username = user.username;
+
+    res.json({ message: "Успішний логін", user: { id: user.id, username: user.username } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Помилка сервера" });
+  }
+});
+
+app.get("/api/todo", isAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    const result = await pool.query(
+      `
+      SELECT 
+        task.*, 
+        category.title AS category_title, 
+        priority.title AS priority_title, 
+        priority.color AS priority_color
+      FROM todolist.task AS task
+      LEFT JOIN todolist.category AS category ON task.category_id = category.id
+      LEFT JOIN todolist.priority AS priority ON task.priority_id = priority.id
+      WHERE task.user_id = $1;
+    `,
+      [userId]
+    );
+
     res.json(result.rows);
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ error: "Помилка при отриманні користувачів" });
+    res.status(500).json({ error: "Помилка при отриманні задач із категорією та пріоритетом" });
+  }
+});
+
+app.post("/api/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid");
+    res.json({ message: "Ви вийшли з системи" });
+  });
+});
+
+app.get("/api/me", (req, res) => {
+  if (req.session.userId) {
+    res.json({ id: req.session.userId, username: req.session.username });
+  } else {
+    res.status(401).json({ message: "Не авторизований" });
   }
 });
 
