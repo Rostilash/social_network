@@ -5,6 +5,7 @@ const instance = axios.create({
 });
 const localInstance = axios.create({
   baseURL: "http://localhost:5000/",
+  withCredentials: true,
 });
 
 export const usersApi = {
@@ -62,7 +63,7 @@ export const authApi = {
 export const todoApi = {
   async getLogin(username, password) {
     try {
-      const response = await localInstance.post("api/login", { username, password }, { withCredentials: true });
+      const response = await localInstance.post("api/login", { username, password });
       return response.data;
     } catch (err) {
       throw err;
@@ -70,7 +71,7 @@ export const todoApi = {
   },
   async getUserTodos() {
     try {
-      const response = await localInstance.get("api/todo", { withCredentials: true });
+      const response = await localInstance.get("api/todo");
       return response.data;
     } catch (error) {
       if (error.response?.status === 401) {
@@ -82,14 +83,22 @@ export const todoApi = {
   },
   async logoutUser() {
     try {
-      const response = await localInstance.post("api/logout", null, { withCredentials: true });
+      const response = await localInstance.post("api/logout", null);
       return response.data.message;
     } catch (error) {
       console.log("Не вдалося вийти");
     }
   },
   async checkUserAuth() {
-    const response = await localInstance.get("api/me", { withCredentials: true });
+    const response = await localInstance.get("api/me");
     return { user: response.data };
+  },
+  async getStatus() {
+    const response = await localInstance.get("api/status");
+    return response.data.status;
+  },
+  async updateStatus(value) {
+    const response = await localInstance.put("api/status", { status_text: value });
+    return response.data.message;
   },
 };

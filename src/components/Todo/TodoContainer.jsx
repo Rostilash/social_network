@@ -1,94 +1,84 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "./TodoContainer.css";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuthThunk, getTodoListThunk, loginThunk, logoutUserThunk } from "../../redux/todo-reducer";
+import { checkAuthThunk, getTodoListThunk, getTodoStatusThunk, loginThunk, logoutUserThunk, updateTodoStatusThunk } from "../../redux/todo-reducer";
+import { LoginForm } from "./LoginForm";
+import { StatusEditor } from "./StatusEditor";
+import { TodoList } from "./TodoList";
 
 export const TodoContainer = () => {
   const dispatch = useDispatch();
 
-  const { isTodoAuth, data, error, todoData } = useSelector((state) => state.todo);
+  const isTodoAuth = useSelector((state) => state.todo.isTodoAuth);
+  const todo_status = useSelector((state) => state.todo.todo_status);
+  const todoData = useSelector((state) => state.todo.todoData);
+  const data = useSelector((state) => state.todo.data);
 
-  const [username, setUsername] = useState("Rostik");
-  const [password, setPassword] = useState("123456");
-  const [remember, setRemember] = useState(false);
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    remember: false,
+  });
+  const [status, setStatus] = useState(todo_status || "-------");
+  const [statusChange, setStatusChange] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
-    dispatch(loginThunk(username, password, remember));
+    dispatch(loginThunk(formData.username, formData.password, formData.remember));
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleLogout = () => {
     dispatch(logoutUserThunk());
   };
 
+  const saveStatus = () => {
+    dispatch(updateTodoStatusThunk(status));
+    setStatusChange(false);
+  };
+
   useEffect(() => {
-    if (localStorage.getItem("rememberme") === "true") {
+    if (localStorage.getItem("rememberme") === "true" && isTodoAuth === false) {
       dispatch(checkAuthThunk());
     }
   }, []);
 
   useEffect(() => {
+    if (todo_status) {
+      setStatus(todo_status);
+    }
+  }, [todo_status]);
+
+  useEffect(() => {
     if (isTodoAuth) {
       dispatch(getTodoListThunk());
+      dispatch(getTodoStatusThunk());
     }
-  }, [isTodoAuth, data]);
+  }, [isTodoAuth]);
 
   return (
     <div>
-      <p>{error}</p>
-
-      {isTodoAuth && <span>Привіт: {data.user.username}</span>}
-
-      {!isTodoAuth && (
-        <>
-          <h1>Log In</h1>
-          <form onSubmit={handleLogin}>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
-              placeholder="username"
-            />
-            <input
-              type="password"
-              placeholder="password"
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-            <input
-              name="rememberme"
-              type="checkbox"
-              text="Запам'ятати мене"
-              checked={remember}
-              onChange={() => {
-                setRemember((prev) => !prev);
-              }}
-            />
-
-            <button type="sumbit">Log In</button>
-          </form>
-        </>
-      )}
+      {!isTodoAuth && <LoginForm formData={formData} onChange={handleChange} onSubmit={handleLogin} />}
 
       {isTodoAuth && (
         <>
-          <button onClick={handleLogout}>Вихід</button>
-          <h3>Завдання на сьогодні:</h3>
-          {todoData &&
-            todoData.map((todo) => (
-              <div key={todo.id}>
-                <input type="checkbox" id={`checkbox-${todo.id}`} checked={todo.completed === "1"} readOnly />
+          <div>
+            <span>Привіт: {data.user.username} | </span>
+            <button onClick={handleLogout}>Вихід</button>
+          </div>
 
-                <span style={{ color: todo.priority_color }}>{todo.title}</span>
-              </div>
-            ))}
+          <StatusEditor status={status || "-------"} setStatus={setStatus} onSave={saveStatus} editing={statusChange} setEditing={setStatusChange} />
         </>
       )}
+
+      {isTodoAuth && todoData && <TodoList todos={todoData} />}
     </div>
   );
 };

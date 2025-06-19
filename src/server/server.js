@@ -37,6 +37,7 @@ function isAuth(req, res, next) {
   }
 }
 
+// current user app open
 app.get("/api/users", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM todolist.user_data");
@@ -72,6 +73,69 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+app.post("/api/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid");
+    res.json({ message: "Ви вийшли з системи" });
+  });
+});
+
+app.get("/api/me", (req, res) => {
+  if (req.session.userId) {
+    res.json({ id: req.session.userId, username: req.session.username });
+  } else {
+    res.status(401).json({ message: "Не авторизований" });
+  }
+});
+// current user app close
+
+app
+  .route("/api/status")
+  .all(isAuth)
+
+  .get(async (req, res) => {
+    const userId = req.session.userId;
+    try {
+      const result = await pool.query("SELECT status_text FROM todolist.status WHERE user_id = $1", [userId]);
+      if (result.rows.length === 0) {
+        return res.status(404).json({ message: "Статус не знайдено" });
+      }
+      res.json({ status: result.rows[0].status_text });
+    } catch (error) {
+      console.error("Помилка при отриманні статусу:", error);
+      res.status(500).json({ message: "Помилка сервера" });
+    }
+  })
+  .post(async (req, res) => {
+    const userId = req.session.userId;
+    const { status_text } = req.body;
+    try {
+      const exists = await pool.query("SELECT 1 FROM todolist.status WHERE user_id = $1", [userId]);
+      if (exists.rows.length > 0) {
+        return res.status(400).json({ message: "Статус вже існує, використовуйте PUT для оновлення" });
+      }
+      await pool.query("INSERT INTO todolist.status (user_id, status_text) VALUES ($1, $2)", [userId, status_text]);
+      res.json({ message: "Статус створено" });
+    } catch (error) {
+      console.error("Помилка при створенні статусу:", error);
+      res.status(500).json({ message: "Помилка сервера" });
+    }
+  })
+  .put(async (req, res) => {
+    const userId = req.session.userId;
+    const { status_text } = req.body;
+    try {
+      const result = await pool.query("UPDATE todolist.status SET status_text = $1 WHERE user_id = $2", [status_text, userId]);
+      if (result.rowCount === 0) {
+        return res.status(404).json({ message: "Статус не знайдено" });
+      }
+      res.json({ message: "Статус оновлено" });
+    } catch (error) {
+      console.error("Помилка при оновленні статусу:", error);
+      res.status(500).json({ message: "Помилка сервера" });
+    }
+  });
+
 app.get("/api/todo", isAuth, async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -97,22 +161,6 @@ app.get("/api/todo", isAuth, async (req, res) => {
     res.status(500).json({ error: "Помилка при отриманні задач із категорією та пріоритетом" });
   }
 });
-
-app.post("/api/logout", (req, res) => {
-  req.session.destroy(() => {
-    res.clearCookie("connect.sid");
-    res.json({ message: "Ви вийшли з системи" });
-  });
-});
-
-app.get("/api/me", (req, res) => {
-  if (req.session.userId) {
-    res.json({ id: req.session.userId, username: req.session.username });
-  } else {
-    res.status(401).json({ message: "Не авторизований" });
-  }
-});
-
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
 });
