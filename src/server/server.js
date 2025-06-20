@@ -15,7 +15,7 @@ app.use(
 
 app.use(express.json());
 
-console.log("SESSION_SECRET:", process.env.SESSION_SECRET);
+// console.log("SESSION_SECRET:", process.env.SESSION_SECRET);
 
 app.use(
   session({
@@ -36,7 +36,6 @@ function isAuth(req, res, next) {
     res.status(401).json({ message: "Не авторизований" });
   }
 }
-
 // current user app open
 app.get("/api/users", async (req, res) => {
   try {
@@ -88,7 +87,6 @@ app.get("/api/me", (req, res) => {
   }
 });
 // current user app close
-
 app
   .route("/api/status")
   .all(isAuth)
@@ -108,13 +106,13 @@ app
   })
   .post(async (req, res) => {
     const userId = req.session.userId;
-    const { status_text } = req.body;
+    const { status_text, created_at } = req.body;
     try {
       const exists = await pool.query("SELECT 1 FROM todolist.status WHERE user_id = $1", [userId]);
       if (exists.rows.length > 0) {
         return res.status(400).json({ message: "Статус вже існує, використовуйте PUT для оновлення" });
       }
-      await pool.query("INSERT INTO todolist.status (user_id, status_text) VALUES ($1, $2)", [userId, status_text]);
+      await pool.query("INSERT INTO todolist.status (user_id, status_text,created_at) VALUES ($1, $2, $3)", [userId, status_text, created_at]);
       res.json({ message: "Статус створено" });
     } catch (error) {
       console.error("Помилка при створенні статусу:", error);
@@ -161,6 +159,80 @@ app.get("/api/todo", isAuth, async (req, res) => {
     res.status(500).json({ error: "Помилка при отриманні задач із категорією та пріоритетом" });
   }
 });
+
+app.post("/api/todo", isAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const { title, category_id, priority_id, completed, task_date } = req.body;
+
+    const parsedCategoryId = parseInt(category_id, 10);
+    const parsedPriorityId = parseInt(priority_id, 10);
+    const parsedCompleted = completed === "0" || completed === 0 || completed === false ? 0 : 1;
+
+    const result = await pool.query(
+      `INSERT INTO todolist.task (user_id, title, category_id, priority_id, completed, task_date)
+      VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING *;`,
+      [userId, title, parsedCategoryId, parsedPriorityId, parsedCompleted, task_date]
+    );
+
+    res.status(201).json({ message: "Завдання створено", task: result.rows[0] });
+  } catch (err) {
+    console.error("❌ DB error:", err.message);
+    res.status(500).json({ error: "Помилка при створенні задачі" });
+  }
+});
+
+app.delete("/api/todo/:id", isAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const taskId = parseInt(req.params.id, 10);
+
+    const result = await pool.query(
+      `DELETE FROM todolist.task 
+      WHERE id = $1 AND user_id = $2
+       RETURNING *;`,
+      [taskId, userId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Задача не знайдена або ви не маєте доступу" });
+    }
+
+    res.status(200).json({ message: "Задача видалена", deletedTask: result.rows[0] });
+  } catch (err) {
+    console.error("❌ DB error при видаленні:", err.message);
+    res.status(500).json({ error: "Помилка при видаленні задачі" });
+  }
+});
+
+app.put("/api/todo/:id", isAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const taskId = parseInt(req.params.id, 10);
+    const { completed } = req.body;
+
+    const parsedCompleted = completed === true || completed === "1" || completed === 1 ? 1 : 0;
+
+    const result = await pool.query(
+      `UPDATE todolist.task
+      SET completed = $1
+      WHERE id = $2 AND user_id = $3
+       RETURNING *;`,
+      [parsedCompleted, taskId, userId]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Задача не знайдена або ви не маєте доступу" });
+    }
+
+    res.status(200).json({ message: "Статус завдання оновлено", task: result.rows[0] });
+  } catch (err) {
+    console.error("❌ DB error при оновленні:", err.message);
+    res.status(500).json({ error: "Помилка при оновленні задачі" });
+  }
+});
+
 app.listen(5000, () => {
   console.log("Server running on http://localhost:5000");
 });

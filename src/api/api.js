@@ -69,18 +69,6 @@ export const todoApi = {
       throw err;
     }
   },
-  async getUserTodos() {
-    try {
-      const response = await localInstance.get("api/todo");
-      return response.data;
-    } catch (error) {
-      if (error.response?.status === 401) {
-        console.log("Користувач не авторизований");
-      } else {
-        console.error("Помилка:", error.message);
-      }
-    }
-  },
   async logoutUser() {
     try {
       const response = await localInstance.post("api/logout", null);
@@ -100,5 +88,36 @@ export const todoApi = {
   async updateStatus(value) {
     const response = await localInstance.put("api/status", { status_text: value });
     return response.data.message;
+  },
+  async getUserTodos() {
+    try {
+      const response = await localInstance.get("api/todo");
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        console.log("Користувач не авторизований");
+      } else {
+        console.error("Помилка:", error.message);
+      }
+    }
+  },
+  async postTodo(todoData) {
+    try {
+      const response = await localInstance.post("api/todo", todoData);
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        console.log("Користувач не авторизований");
+      } else {
+        console.error("Помилка:", error.response?.data || error.message);
+      }
+    }
+  },
+  async updateTodo(taskId, completed) {
+    const response = await localInstance.put(`/api/todo/${taskId}`, { completed });
+    return response.data.task;
+  },
+  async deleteTodo(taskId) {
+    await localInstance.delete(`/api/todo/${taskId}`);
   },
 };

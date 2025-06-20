@@ -32,3 +32,11 @@ export const getFollowingInProgress = (state) => {
 export const getIsAuth = (state) => {
   return state.auth.isAuth;
 };
+
+const selectTodoState = (state) => state.todo;
+
+// memo Selectors for todoData
+export const selectTodoData = createSelector([selectTodoState], (todo) => todo.todoData);
+export const selectIsTodoAuth = createSelector([selectTodoState], (todo) => todo.isTodoAuth);
+export const selectUserData = createSelector([selectTodoState], (todo) => todo.data);
+export const selectTodoStatus = createSelector([selectTodoState], (todo) => todo.todo_status);

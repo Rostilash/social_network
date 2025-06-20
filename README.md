@@ -19,6 +19,7 @@ pgSql server/: (Make new Server Folder)(with axios)
 npm init -y
 npm install express cors (npm install cors)
 node index.js (in terminal you can start the server by loading the current file)
+Add posgreSQL (made with pgAdmin 4)
 npm install pg (const { Pool } = require('pg');)
 npm install express-session (for Auth)
 

@@ -32,7 +32,7 @@ export function NavBar() {
         </li> */}
         <li>
           <NavLink to="/todo" className={({ isActive }) => (isActive ? "active-link" : "")}>
-            Треба зробити
+            Завдання
           </NavLink>
         </li>
         {/* <li>

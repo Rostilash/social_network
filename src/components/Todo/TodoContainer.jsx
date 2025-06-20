@@ -1,26 +1,41 @@
 import React, { useEffect, useState } from "react";
 import "./TodoContainer.css";
 import { useDispatch, useSelector } from "react-redux";
-import { checkAuthThunk, getTodoListThunk, getTodoStatusThunk, loginThunk, logoutUserThunk, updateTodoStatusThunk } from "../../redux/todo-reducer";
+import {
+  checkAuthThunk,
+  deleteTodoListThunk,
+  getTodoListThunk,
+  getTodoStatusThunk,
+  loginThunk,
+  logoutUserThunk,
+  postTodoListThunk,
+  updateTodoListThunk,
+  updateTodoStatusThunk,
+} from "../../redux/todo-reducer";
 import { LoginForm } from "./LoginForm";
 import { StatusEditor } from "./StatusEditor";
 import { TodoList } from "./TodoList";
+import { AddTodo } from "./AddTodo";
+import { selectIsTodoAuth, selectTodoData, selectTodoStatus, selectUserData } from "../../redux/users-selectors";
 
 export const TodoContainer = () => {
   const dispatch = useDispatch();
 
-  const isTodoAuth = useSelector((state) => state.todo.isTodoAuth);
-  const todo_status = useSelector((state) => state.todo.todo_status);
-  const todoData = useSelector((state) => state.todo.todoData);
-  const data = useSelector((state) => state.todo.data);
+  const todoData = useSelector(selectTodoData);
+  const isTodoAuth = useSelector(selectIsTodoAuth);
+  const userData = useSelector(selectUserData);
+  const todoStatus = useSelector(selectTodoStatus);
 
   const [formData, setFormData] = useState({
     username: "",
     password: "",
     remember: false,
   });
-  const [status, setStatus] = useState(todo_status || "-------");
+  const [status, setStatus] = useState(todoStatus || "-------");
   const [statusChange, setStatusChange] = useState(false);
+  const [todoMessage, setTodoMessage] = useState("");
+  const [priority, setPriority] = useState("");
+  const [category, setCategory] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -44,6 +59,28 @@ export const TodoContainer = () => {
     setStatusChange(false);
   };
 
+  const sendTodo = (e) => {
+    e.preventDefault();
+    const time = new Date().toTimeString().split(" ")[0];
+    dispatch(postTodoListThunk(todoMessage, category, priority, "0", time));
+  };
+
+  const handleDeleteTodo = (id) => {
+    dispatch(deleteTodoListThunk(id));
+  };
+
+  const handleUpdateTodo = (id, completed) => {
+    dispatch(updateTodoListThunk(id, completed));
+  };
+
+  const handleSelectChange = (e) => {
+    setPriority(e.target.value);
+  };
+
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+  };
+
   useEffect(() => {
     if (localStorage.getItem("rememberme") === "true" && isTodoAuth === false) {
       dispatch(checkAuthThunk());
@@ -51,10 +88,10 @@ export const TodoContainer = () => {
   }, []);
 
   useEffect(() => {
-    if (todo_status) {
-      setStatus(todo_status);
+    if (todoStatus) {
+      setStatus(todoStatus);
     }
-  }, [todo_status]);
+  }, [todoStatus]);
 
   useEffect(() => {
     if (isTodoAuth) {
@@ -70,7 +107,9 @@ export const TodoContainer = () => {
       {isTodoAuth && (
         <>
           <div>
-            <span>Привіт: {data.user.username} | </span>
+            <button onClick={() => dispatch(getTodoListThunk())}>Оновити список</button>
+            <br />
+            <span>Привіт: {userData.user.username} | </span>
             <button onClick={handleLogout}>Вихід</button>
           </div>
 
@@ -78,7 +117,21 @@ export const TodoContainer = () => {
         </>
       )}
 
-      {isTodoAuth && todoData && <TodoList todos={todoData} />}
+      {isTodoAuth && todoData && (
+        <>
+          <AddTodo
+            sendMessage={sendTodo}
+            setMessage={setTodoMessage}
+            message={todoMessage}
+            priority={priority}
+            category={category}
+            handleSelectChange={handleSelectChange}
+            handleCategoryChange={handleCategoryChange}
+          />
+
+          <TodoList todos={todoData} handleDelete={handleDeleteTodo} handleUpdateTodo={handleUpdateTodo} />
+        </>
+      )}
     </div>
   );
 };
